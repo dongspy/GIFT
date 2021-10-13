@@ -1,95 +1,123 @@
-(function() {
-    'use strict';
+// if_data.js 引入全部journal impact factor
 
-  function get_if(){
-  // url_str = "http://127.0.0.1:8000/biomedx/get_if?name=" + journal_name ;
-    var journal_name = $('journal').val();
-    $('#if').val(if_data[journal_name]);
-    
+(function () {
+  'use strict';
+  
+
+  function proc_journal_name(journal_name){
+    var journal_name2 = journal_name.replace(/(\.|\-|\s|\_|\(|\)|,|;|amp)/ig, '').toUpperCase();
+    return journal_name2
   }
 
-  function show_if(){
-//展示影响因子
-  // Your code here...
-  $('#gs_res_ccl_mid .gs_or').each(function(){
-    var self = $(this);
-    var data_id = $(this).attr('data-cid');
-    var url = "https://scholar.google.com/scholar?q=info:" + data_id + ":scholar.google.com/&output=cite&scirp=2&hl=en";
-      $.ajax({
-              url: url,
-              // dataType: "json",
-              type: "GET",
-              async: true,
-              success: function (xhr) {
-                 // r_text=data;
-                 var journal_name = $(xhr).find('tr').first().find('div.gs_citr').find('i').html();
-                 if(journal_name){ 
 
-                  var journal_name2 = journal_name.replace(/(\.|\-|\s|\_|\(|\)|,|;|amp)/ig, '').toUpperCase();
-                  console.log(journal_name2);
-                  if(if_data[journal_name2]){
-                    var q = if_data[journal_name2][0];
-                    var impact_factor = if_data[journal_name2][1];
-                    self.append('<div class="gs_fl"><span>' + journal_name + '</span> - <span>' + q + '</span> - <span>' + impact_factor + '</span>');
-                  }
-                }
-                 // console.log(journal_name);
-                 // console.log(if_data[journal_name]);
-                 
-              },
-              error: function (xhr, exception) {
+  function get_if() {
+    // url_str = "http://127.0.0.1:8000/biomedx/get_if?name=" + journal_name ;
+    var journal_name = $('#journal').val();
+    var journal_name2 = proc_journal_name(journal_name);
+    console.log(journal_name2);
+    $('#if').val(if_data[journal_name2]);
 
-                  console.log(exception);
+  }
 
-              }
-      });
+  $('#get_if').click(function () {
+    get_if();
+
   })
-}
 
-var show_if_flag=true;
-// 读取数据，第一个参数是指定要读取的key以及设置默认值
-chrome.storage.sync.get({showif: true}, function(items) {
-  if(items.showif){
-    show_if();
+  
+
+  function show_google_scholar_if() {
+    //展示影响因子
+    $('#gs_res_ccl_mid .gs_or').each(function () {
+      var self = $(this);
+      var data_id = $(this).attr('data-cid');
+      var url = "https://scholar.google.com/scholar?q=info:" + data_id + ":scholar.google.com/&output=cite&scirp=2&hl=en";
+      $.ajax({
+        url: url,
+        // dataType: "json",
+        type: "GET",
+        async: true,
+        success: function (xhr) {
+          // r_text=data;
+          var journal_name = $(xhr).find('tr').first().find('div.gs_citr').find('i').html();
+          if (journal_name) {
+
+            var journal_name2 = proc_journal_name(journal_name);
+            if (if_data[journal_name2]) {
+              var impact_factor = if_data[journal_name2];
+              self.append('<div class="gs_fl"><span>' + journal_name + ' - ' + impact_factor + '</span></div>');
+            }
+          }
+          // console.log(journal_name);
+          // console.log(if_data[journal_name]);
+
+        },
+        error: function (xhr, exception) {
+
+          console.log(exception);
+
+        }
+      });
+    })
   }
-});
 
+  function show_pubmed_if() {
+    //展示影响因子
+    // #search-results > section > div.search-results-chunks > div > article:nth-child(6) > div.docsum-wrap > div.docsum-content > div.docsum-citation.full-citation > span.docsum-journal-citation.full-journal-citation
+    $('span.docsum-journal-citation.full-journal-citation').each(function(){
+      var self = $(this);
+      var journal_name = $(this).text().split('.')[0];
+      if(journal_name){
+        var journal_name2 = proc_journal_name(journal_name);
+            if (if_data[journal_name2]) {
+              var impact_factor = if_data[journal_name2];
+              self.append('<div><span>[Impact Factor] ' + impact_factor + '</span></div>');
+            }
+      }
+    })
+  
+  }
 
+  // google scholar
+  var show_if_flag = true;
+  // 读取数据，第一个参数是指定要读取的key以及设置默认值
+  chrome.storage.sync.get({ showif: true }, function (items) {
+    if (items.showif) {
+      show_google_scholar_if();
+    }
+  });
 
   // 显示badge
-$('#show_if').click(() => {
-  chrome.browserAction.setBadgeText({text: 'ON'});
-  chrome.browserAction.setBadgeBackgroundColor({color: [255, 0, 0, 255]});
-  // 保存数据
-  chrome.storage.sync.set({showif: true}, function() {
-    console.log('保存成功！');
+  $('#show_if').click(() => {
+    chrome.browserAction.setBadgeText({ text: 'ON' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+    // 保存数据
+    chrome.storage.sync.set({ showif: true }, function () {
+      console.log('保存成功！');
+    });
+
+    // popup主动发消息给content-script
+    $('#send_message_to_content_script').click(() => {
+      sendMessageToContentScript('你好，我是popup！', (response) => {
+        if (response) alert('收到来自content-script的回复：' + response);
+      });
+    });
+
   });
 
-  // popup主动发消息给content-script
-$('#send_message_to_content_script').click(() => {
-  sendMessageToContentScript('你好，我是popup！', (response) => {
-    if(response) alert('收到来自content-script的回复：'+response);
+  // 隐藏badge
+  $('#hide_if').click(() => {
+    chrome.browserAction.setBadgeText({ text: 'OFF' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+    chrome.storage.sync.set({ showif: false }, function () {
+      console.log('保存成功！');
+    });
   });
-});
 
-});
-
-// 隐藏badge
-$('#hide_if').click(() => {
-  chrome.browserAction.setBadgeText({text: 'OFF'});
-  chrome.browserAction.setBadgeBackgroundColor({color: [255, 0, 0, 255]});
-  chrome.storage.sync.set({showif: false}, function() {
-    console.log('保存成功！');
-  });
-});
+// pubmed
+show_pubmed_if();
 
 
-
-$('#get_if').click(function(){
-  var journal_name = $('#journal').val();
-  $('#if').val(if_data[journal_name]);
-
-})
 
 
   // $('#google_scholar').click(function(){
