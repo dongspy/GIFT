@@ -15,9 +15,33 @@
     var journal_name = $('#journal').val();
     var journal_name2 = proc_journal_name(journal_name);
     console.log(journal_name2);
-    $('#if').val(if_data[journal_name2]);
+    $('#if').text('Impact Factor: ' + if_data[journal_name2]);
 
   }
+
+  function contains(string, substr, isIgnoreCase)
+{
+    if (isIgnoreCase)
+    {
+         string = string.toLowerCase();
+         substr = substr.toLowerCase();
+    }
+
+    var startChar = substr.substring(0, 1);
+    var strLen = substr.length;
+
+    for (var j = 0; j<string.length - strLen + 1; j++)
+    {
+         if (string.charAt(j) == startChar)  //如果匹配起始字符,开始查找
+         {
+             if (string.substring(j, j+strLen) == substr)  //如果从j开始的字符与str匹配，那ok
+             {
+                 return true;
+             }
+         }
+    }
+    return false;
+}
 
   $('#get_if').click(function () {
     get_if();
@@ -30,35 +54,57 @@
     //展示影响因子
     $('#gs_res_ccl_mid .gs_or').each(function () {
       var self = $(this);
-      var data_id = $(this).attr('data-cid');
-      var url = "https://scholar.google.com/scholar?q=info:" + data_id + ":scholar.google.com/&output=cite&scirp=2&hl=en";
-      $.ajax({
-        url: url,
-        // dataType: "json",
-        type: "GET",
-        async: true,
-        success: function (xhr) {
-          // r_text=data;
-          var journal_name = $(xhr).find('tr').first().find('div.gs_citr').find('i').html();
-          if (journal_name) {
+      
+      var pattern = /(?<=-\s).+(?=,)/i ;
+      var journal_str = pattern.exec(self.children("div.gs_ri").first().children('div.gs_a').first().text())[0];
 
-            var journal_name2 = proc_journal_name(journal_name);
-            if (if_data[journal_name2]) {
-              var impact_factor = if_data[journal_name2];
-              self.append('<div class="gs_fl"><span>' + journal_name + ' - ' + impact_factor + '</span></div>');
+      if(contains(journal_str, '…', true)){
+          var data_id = $(this).attr('data-cid');
+          var url = "https://scholar.google.com/scholar?q=info:" + data_id + ":scholar.google.com/&output=cite&scirp=2&hl=en";
+          $.ajax({
+            url: url,
+            // dataType: "json",
+            type: "GET",
+            async: true,
+            success: function (xhr) {
+              // r_text=data;
+              var journal_name = $(xhr).find('tr').first().find('div.gs_citr').find('i').html();
+              if (journal_name) {
+
+                var journal_name2 = proc_journal_name(journal_name);
+                if (if_data[journal_name2]){
+                  var impact_factor = if_data[journal_name2];
+                  self.append('<div class="gs_fl"><span>' + journal_name + ' - ' + impact_factor + '</span></div>');
+                }else{
+                  self.append('<div class="gs_fl"><span>' + journal_name + ' - na </span></div>');
+
+                }
+              }
+              // console.log(journal_name);
+              // console.log(if_data[journal_name]);
+
+            },
+            error: function (xhr, exception) {
+
+              console.log(exception);
+
             }
+          });
+        }else{
+          var journal_name = journal_str;
+          var journal_name2 = proc_journal_name(journal_name);
+          if (if_data[journal_name2]) {
+            var impact_factor = if_data[journal_name2];
+            self.append('<div class="gs_fl"><span>' + journal_name + ' - ' + impact_factor + '</span></div>');
+          }else{
+            self.append('<div class="gs_fl"><span>' + journal_name + ' - na </span></div>');
+
           }
-          // console.log(journal_name);
-          // console.log(if_data[journal_name]);
-
-        },
-        error: function (xhr, exception) {
-
-          console.log(exception);
-
+          // var impact_factor = if_data[journal_name2];
+          // self.append('<div class="gs_fl"><span>xx:' + journal_name + '</span></div>');
         }
-      });
-    })
+      })
+      
   }
 
   function show_pubmed_if() {
