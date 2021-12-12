@@ -1,40 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous"> -->
-    <title></title>
 
+<head>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous"> -->
+  <title></title>
+<style>
+  table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
 </head>
+
 <body>
 
 
   <fieldset>
-      <legend>2021影响因子查询</legend>
-      <input type="text" id='journal' placeholder="Journal Name" />
-      <button type="submit" id='get_if' class="pure-button pure-button-primary">Search</button>
-      <div for="aligned-foo" id='if'>  &nbsp;&nbsp; </div> 
+    <legend>2021影响因子查询</legend>
+    <input type="text" id='journal' placeholder="Journal Name" />
+    <button type="submit" id='get_if' class="pure-button pure-button-primary">Search</button>
+    <div for="aligned-foo" id='if'> &nbsp;&nbsp; </div>
   </fieldset>
 
 
 
 
-<div>
-  <!-- <span>谷歌学术二级查询状态:</span>  <a href="#" id='show_if'>显示谷歌学术影响因子查询</a> -->
- <div> <a href="#" id='show_if'>显示谷歌学术影响因子查询</a> </div>
- <div> <a href="#" id='hide_if'>关闭谷歌学术影响因子查询</a> </div>
-</div>
+  <div>
+    <!-- <span>谷歌学术二级查询状态:</span>  <a href="#" id='show_if'>显示谷歌学术影响因子查询</a> -->
+    <div> <a href="#" id='show_if'>显示谷歌学术影响因子查询</a> </div>
+    <div> <a href="#" id='hide_if'>关闭谷歌学术影响因子查询</a> </div>
+  </div>
+<hr>
+<button class="btn btn-danger" id="export">Export</button>
+<button class="btn btn-danger" id="clear_storage">Clear Storage</button>
 
 
-<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
-<script type="text/javascript" src="js/impact_factor.js"></script>
+  <div id="article_info">Article Info</div>
+  
 
-<script type="text/javascript" src="js/gosif.js"></script>
 
-<!-- <script type="text/javascript" src="js/biomedx.js"></script> -->
+  <script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+  <script type="text/javascript" src="js/jquery.tabletocsv.js"></script>
+  <script type="text/javascript" src="js/impact_factor.js"></script>
 
-<!-- <script type="text/javascript">get_if('Nature')</script> -->
+  <script type="text/javascript" src="js/gosif.js"></script>
+  <script type="text/javascript" src="js/pupup.js"></script>
+
+  <!-- <script type="text/javascript" src="js/biomedx.js"></script> -->
+
+  <!-- <script type="text/javascript">get_if('Nature')</script> -->
 
 </body>
 

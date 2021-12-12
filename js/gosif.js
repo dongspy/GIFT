@@ -317,13 +317,53 @@
   // pubmed
   show_pubmed_if();
 
+  function popup_article_info(){
+    chrome.storage.sync.get({ 'term_articles': {} }, function (items) {
 
-  $("input.checkout").click(function () {
-    console.log($(this).attr('class'));
-  });
+      var term_articles = items.term_articles
+      // var term = $('#gs_hdr_tsi').val().trim();
+
+      var table_html = '<table class="table" id="article_table"><thead><tr><th>Term</th><th>Article</th>' + 
+        '<th>Publish Date</th> <th>Cite</th> <th>Journal</th> <th>Impact Factor</th></tr></thead>'
+
+      for (var term in term_articles) {
+        var tr_html = '<tr>'
+        for (var data_id in term_articles[term]){
+          var article_info = term_articles[term][data_id]
+          // [article_title, cite_count, publish_year, journal_name, impact_factor]
+          tr_html += '<td>' + term + '</td>'
+          tr_html += '<td>' + article_info[0] + '</td>'
+          tr_html += '<td>' + article_info[2] + '</td>'
+          tr_html += '<td>' + article_info[1] + '</td>'
+          tr_html += '<td>' + article_info[3] + '</td>'
+          tr_html += '<td>' + article_info[4] + '</td>'
+          tr_html += '</tr>'
+        }
+        table_html += tr_html
+        table_html += '</table>'
+        $('div#article_info').append('<div>' + table_html + '</div>');   
+      }
+    });
+
+    $('#export').on('click',function(){
+      $('#article_table').tableToCsv({
+        outputheaders:true,
+        extension:'tsv',
+        fileName: 'Article_Information',
+        seperator:'\t',
 
 
 
+      });
+    })
+
+    $('#clear_storage').on('click',function(){
+      // $('#clear_storage').tableToCsv();
+      chrome.storage.sync.set({ 'term_articles': {} })
+    })
+  }
+
+  popup_article_info()
 
   // $('#google_scholar').click(function(){
   //       $('#gs_res_ccl_mid .gs_or').each(function(){
