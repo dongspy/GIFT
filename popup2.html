@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous"> -->
+  <title></title>
+
+  <!-- MDB -->
+  <link href="css/mdb.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+
+
+
+  <fieldset>
+    <legend>2021影响因子查询</legend>
+    <input type="text" id='journal' placeholder="Journal Name" />
+    <button type="submit" id='get_if' class="pure-button pure-button-primary">Search</button>
+    <div for="aligned-foo" id='if'> &nbsp;&nbsp; </div>
+  </fieldset>
+
+
+
+
+  <div>
+    <!-- <span>谷歌学术二级查询状态:</span>  <a href="#" id='show_if'>显示谷歌学术影响因子查询</a> -->
+    <div> <a href="#" id='show_if'>显示谷歌学术影响因子查询</a> </div>
+    <div> <a href="#" id='hide_if'>关闭谷歌学术影响因子查询</a> </div>
+  </div>
+
+  <div>
+    <div class="list-group">
+      <label class="list-group-item">
+        <input class="form-check-input me-1" type="checkbox" value="" />
+        Cras justo odio
+      </label>
+      <label class="list-group-item">
+        <input class="form-check-input me-1" type="checkbox" value="" />
+        Dapibus ac facilisis in
+      </label>
+      <label class="list-group-item">
+        <input class="form-check-input me-1" type="checkbox" value="" />
+        Morbi leo risus
+      </label>
+      <label class="list-group-item">
+        <input class="form-check-input me-1" type="checkbox" value="" />
+        Porta ac consectetur ac
+      </label>
+      <label class="list-group-item">
+        <input class="form-check-input me-1" type="checkbox" value="" />
+        Vestibulum at eros
+      </label>
+    </div>
+  </div>
+
+
+  <div id="try">
+
+    <input type="checkbox" class="ckb" name="vehicle1" value="Bike" title='aa' style="display:inline"> aa </input>
+    <input type="checkbox" class="ckb" name="vehicle1" value="Bike" title='ab' style="display:inline"> ab </input>
+    <input type="checkbox" class="ckb" name="vehicle1" value="Bike" title='ca' style="display:inline"> ca </input>
+    <input type="checkbox" class="ckb" name="vehicle1" value="Bike" title='ada' style="display:inline"> ada </input>
+
+  </div>
+
+  <div id="txtAge" style="display:none">Age is something</div>
+
+
+  <script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+  <script type="text/javascript" src="js/impact_factor.js"></script>
+
+  <script type="text/javascript" src="js/gosif.js"></script>
+
+  <script>
+
+
+
+    $(function () {
+      // $(".ckb").click(function(e) {
+      //   console.log($(this).html());
+      //   // var clickedValue = $(e.target).text();
+      //   // alert(clickedValue);
+
+      // });
+      $(".ckb").click(function (e) {
+        if ($(this).prop('checked') == true) {
+          // $(this).prop('checked')
+          console.log($(this).prop('title'));
+          console.log('afd');
+        } else {
+          console.log('cancle');
+        }
+
+      })
+
+
+    })
+
+  </script>
+
+  <!-- <script type="text/javascript" src="js/biomedx.js"></script> -->
+
+  <!-- <script type="text/javascript">get_if('Nature')</script> -->
+
+</body>
+
+</html>
