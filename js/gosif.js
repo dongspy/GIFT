@@ -66,9 +66,9 @@
     $('#gs_res_ccl_mid .gs_or').each(function () {
       var self = $(this);
 
-      var checkout_ele = self.find('div.gs_ri');
-      checkout_ele.prepend('<input type="checkbox" class="checkout" name="vehicle1" value="Bike" style="display:inline">');
-      checkout_ele.find('h3').first().css({ 'display': 'inline' });
+     # var checkout_ele = self.find('div.gs_ri');
+     # checkout_ele.prepend('<input type="checkbox" class="checkout" name="vehicle1" value="Bike" style="display:inline">');
+     # checkout_ele.find('h3').first().css({ 'display': 'inline' });
 
       // 提取文章标题
       var article_title = self.find('h3.gs_rt a').first().text();
